@@ -1,0 +1,8 @@
+export const SIGNUP_SUCCESS = "SIGN_UP_SUCCESS";
+export const LOGIN = "LOGIN";
+
+export const CREATE_TABLE_RESULT = "CREATE_TABLE_RESULT";
+export const SHOW_TABLE_RESULT = "SHOW_TABLE_RESULT";
+export const NO_TABLE_RESULT = "NO_TABLE_RESULT";
+
+

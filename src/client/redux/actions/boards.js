@@ -21,10 +21,10 @@ export function showBoards(userID){
     return dispatch => {
         return axios.get(`/api/boards/get_boards?userID=${userID}`)
             .then( res => {
-                dispatch(showBoardsSuccess(res.data.boards))
+                dispatch(showBoardsSuccess(res.data.boards));
             })
             .catch(err => {
-                console.log(err.response.data)
+                dispatch(showBoardsFailed(err.response.data));
             })
     }
 }

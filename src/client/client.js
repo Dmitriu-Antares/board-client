@@ -8,6 +8,7 @@ import reducer from './root-reducer';
 import thunk from 'redux-thunk';
 import setAuthToken from './utils/token';
 import jwt from 'jsonwebtoken';
+import { reduxMiddleWare } from './redux/reduxMiddleware';
 
 import { login } from './redux/actions/signUp';
 
@@ -18,7 +19,7 @@ const store = createStore(
     reducer,
     window.INITIAL_STATE,
     compose(
-        applyMiddleware(thunk),
+        applyMiddleware(thunk,reduxMiddleWare),
         window.devToolsExtension ? window.devToolsExtension() : f => f
     )
 );

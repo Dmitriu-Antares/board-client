@@ -8414,6 +8414,13 @@ var CREATE_TABLE_RESULT = exports.CREATE_TABLE_RESULT = "CREATE_TABLE_RESULT";
 var SHOW_TABLE_RESULT = exports.SHOW_TABLE_RESULT = "SHOW_TABLE_RESULT";
 var NO_TABLE_RESULT = exports.NO_TABLE_RESULT = "NO_TABLE_RESULT";
 
+var CREATE_TASK = exports.CREATE_TASK = "CREATE_TASK";
+var CREATE_TASK_SUCCESS = exports.CREATE_TASK_SUCCESS = "CREATE_TASK_SUCCESS";
+var CREATE_TASK_ERROR = exports.CREATE_TASK_ERROR = "CREATE_TASK_ERROR";
+var SHOW_TASKS = exports.SHOW_TASKS = "SHOW_TASKS";
+var SHOW_TASKS_SUCCESS = exports.SHOW_TASKS_SUCCESS = "SHOW_TASKS_SUCCESS";
+var SHOW_TASKS_ERROR = exports.SHOW_TASKS_ERROR = "SHOW_TASKS_ERROR";
+
 /***/ }),
 /* 54 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -21908,6 +21915,8 @@ var _jsonwebtoken = __webpack_require__(180);
 
 var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
 
+var _reduxMiddleware = __webpack_require__(625);
+
 var _signUp = __webpack_require__(52);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -21915,7 +21924,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 __webpack_require__(620);
 __webpack_require__(623);
 
-var store = (0, _redux.createStore)(_rootReducer2.default, window.INITIAL_STATE, (0, _redux.compose)((0, _redux.applyMiddleware)(_reduxThunk2.default), window.devToolsExtension ? window.devToolsExtension() : function (f) {
+var store = (0, _redux.createStore)(_rootReducer2.default, window.INITIAL_STATE, (0, _redux.compose)((0, _redux.applyMiddleware)(_reduxThunk2.default, _reduxMiddleware.reduxMiddleWare), window.devToolsExtension ? window.devToolsExtension() : function (f) {
     return f;
 }));
 
@@ -45179,7 +45188,7 @@ var Home = (_dec = (0, _reactRedux.connect)(function (state) {
         value: function render() {
             return _react2.default.createElement(
                 'div',
-                null,
+                { className: 'container' },
                 'Home page'
             );
         }
@@ -68696,10 +68705,10 @@ var Boards = (_dec = (0, _reactRedux.connect)(function (state) {
                     _react2.default.createElement(
                         'div',
                         { className: 'd-flex' },
-                        boards && boards.map(function (board) {
+                        boards && boards.map(function (board, key) {
                             return _react2.default.createElement(
                                 _reactRouterDom.Link,
-                                { to: 'boards/' + board.id },
+                                { to: 'boards/' + board.id, key: key },
                                 _react2.default.createElement(
                                     'div',
                                     null,
@@ -68771,7 +68780,7 @@ function showBoards(userID) {
         return _axios2.default.get('/api/boards/get_boards?userID=' + userID).then(function (res) {
             dispatch(showBoardsSuccess(res.data.boards));
         }).catch(function (err) {
-            console.log(err.response.data);
+            dispatch(showBoardsFailed(err.response.data));
         });
     };
 }
@@ -68804,9 +68813,15 @@ exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _dec, _class;
+
 var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(11);
+
+var _tasks = __webpack_require__(627);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -68816,62 +68831,96 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Board = function (_Component) {
+var Board = (_dec = (0, _reactRedux.connect)(function (state) {
+    return {};
+}, { createTask: _tasks.createTask }), _dec(_class = function (_Component) {
     _inherits(Board, _Component);
 
     function Board() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
         _classCallCheck(this, Board);
 
-        return _possibleConstructorReturn(this, (Board.__proto__ || Object.getPrototypeOf(Board)).apply(this, arguments));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Board.__proto__ || Object.getPrototypeOf(Board)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+            title: '',
+            issue: '',
+            warning: false
+        }, _this.addTask = function () {
+            var _this$state = _this.state,
+                title = _this$state.title,
+                issue = _this$state.issue,
+                warning = _this$state.warning;
+
+
+            if (title.length > 4 && issue.length > 4) {
+                warning && _this.setState({ warning: false });
+                _this.props.createTask({ title: title, issue: issue, boardId: _this.props.match.params.id });
+            } else {
+                _this.setState({ warning: true });
+            }
+        }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(Board, [{
-        key: "render",
+        key: 'render',
         value: function render() {
+            var _this2 = this;
+
+            console.log();
             return _react2.default.createElement(
-                "div",
-                { className: "container" },
+                'div',
+                { className: 'container' },
                 _react2.default.createElement(
-                    "div",
+                    'div',
                     null,
                     _react2.default.createElement(
-                        "p",
+                        'p',
                         null,
-                        "Add task ",
+                        'Add task ',
                         _react2.default.createElement(
-                            "span",
+                            'span',
                             null,
-                            "+"
+                            '+'
                         )
                     )
                 ),
                 _react2.default.createElement(
-                    "div",
-                    { className: "d-flex" },
+                    'div',
+                    { className: 'd-flex' },
                     _react2.default.createElement(
-                        "div",
-                        { className: "inpup-group" },
+                        'div',
+                        { className: 'inpup-group' },
                         _react2.default.createElement(
-                            "label",
-                            { htmlFor: "" },
-                            "Name"
+                            'label',
+                            { htmlFor: '' },
+                            'Name'
                         ),
-                        _react2.default.createElement("input", { type: "text" })
+                        _react2.default.createElement('input', { type: 'text', onChange: function onChange(e) {
+                                return _this2.setState({ title: e.target.value });
+                            } })
                     ),
                     _react2.default.createElement(
-                        "div",
-                        { className: "inpup-group" },
+                        'div',
+                        { className: 'inpup-group' },
                         _react2.default.createElement(
-                            "label",
-                            { htmlFor: "" },
-                            "Issue"
+                            'label',
+                            { htmlFor: '' },
+                            'Issue'
                         ),
-                        _react2.default.createElement("input", { type: "text" })
+                        _react2.default.createElement('input', { type: 'text', onChange: function onChange(e) {
+                                return _this2.setState({ issue: e.target.value });
+                            } })
                     ),
                     _react2.default.createElement(
-                        "button",
-                        null,
-                        "Add task"
+                        'button',
+                        { onClick: this.addTask },
+                        'Add task'
                     )
                 )
             );
@@ -68879,8 +68928,7 @@ var Board = function (_Component) {
     }]);
 
     return Board;
-}(_react.Component);
-
+}(_react.Component)) || _class);
 exports.default = Board;
 
 /***/ }),
@@ -68908,6 +68956,10 @@ var _boards = __webpack_require__(618);
 
 var _boards2 = _interopRequireDefault(_boards);
 
+var _tasks = __webpack_require__(626);
+
+var _tasks2 = _interopRequireDefault(_tasks);
+
 var _reduxForm = __webpack_require__(91);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -68916,6 +68968,7 @@ exports.default = (0, _redux.combineReducers)({
     list: _list2.default,
     signUp: _signUp2.default,
     boards: _boards2.default,
+    tasks: _tasks2.default,
     form: _reduxForm.reducer
 });
 
@@ -70097,6 +70150,100 @@ exports.push([module.i, "body, html {\n  padding: 0;\n  margin: 0; }\n", ""]);
 
 // exports
 
+
+/***/ }),
+/* 625 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.reduxMiddleWare = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _axios = __webpack_require__(54);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var reduxMiddleWare = exports.reduxMiddleWare = function reduxMiddleWare(store) {
+    return function (next) {
+        return function (action) {
+            if (action && action.types !== undefined) {
+                store.dispatch({ type: action.types[0] });
+                var result = action.promise(_axios2.default);
+                result.then(function (res) {
+                    var type = { type: action.types[1] };
+                    store.dispatch(_extends({}, type, res.data));
+                }).catch(function (err) {
+                    var type = { type: action.types[2] };
+                    store.dispatch(_extends({}, type, err.response.data));
+                });
+            } else {
+                next(action);
+            }
+        };
+    };
+};
+
+/***/ }),
+/* 626 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _actionNames = __webpack_require__(53);
+
+exports.default = function () {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var action = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    switch (action.type) {
+        case _actionNames.CREATE_TASK:
+            return { loading: true };
+        case _actionNames.CREATE_TASK_SUCCESS:
+            return { loading: false, success: action.success };
+        case _actionNames.CREATE_TASK_ERROR:
+            return { loading: false, error: action.error };
+        default:
+            return state;
+    }
+};
+
+/***/ }),
+/* 627 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.createTask = createTask;
+
+var _actionNames = __webpack_require__(53);
+
+function createTask(data) {
+    return {
+        types: [_actionNames.CREATE_TASK, _actionNames.CREATE_TASK_SUCCESS, _actionNames.CREATE_TASK_ERROR],
+        promise: function promise(client) {
+            return client.post('/api/tasks/add', data).then(function (result) {
+                return result;
+            });
+        }
+    };
+}
 
 /***/ })
 /******/ ]);

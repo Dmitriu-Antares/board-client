@@ -19,7 +19,7 @@ export default class Boards extends Component {
     }
 
     createBoard = () => {
-        this.props.createBoard(this.props.userId,this.state.boardName)
+        this.props.createBoard(this.props.userId,this.state.boardName);
         this.props.showBoards(this.props.userId);
     };
 
@@ -40,9 +40,9 @@ export default class Boards extends Component {
                 <div>
                     <span>Your boards:</span>
                     <div className="d-flex">
-                        { boards && boards.map( board => {
+                        { boards && boards.map( (board,key) => {
                             return (
-                                <Link to={`boards/${board.id}`}>
+                                <Link to={`boards/${board.id}`} key={key}>
                                     <div>
                                         <p>{board.name}</p>
                                         <p>{`Created at ${board.updated_at}`}</p>

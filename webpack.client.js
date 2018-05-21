@@ -1,6 +1,7 @@
 const path = require("path");
 const merge = require("webpack-merge");
 const baseConf = require("./webpack.base");
+const webpack = require('webpack');
 
 const config  = {
     entry: './src/client/client.js',

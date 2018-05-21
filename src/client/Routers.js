@@ -6,7 +6,7 @@ import Header from './containers/Header/Header';
 
 
 export default store => {
-        const { signUp: { isAuth }} = store.getState();
+        const { auth: { isAuth }} = store.getState();
 
         const PrivateRoute = ({ component: Component, ...rest }) => (
             <Route

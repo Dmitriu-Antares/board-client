@@ -1,13 +1,11 @@
 import { combineReducers } from 'redux';
-import list from './redux/reducer/list';
-import signUp from './redux/reducer/signUp';
-import boards from './redux/reducer/boards';
-import tasks from './redux/reducer/tasks';
+import auth from './redux/modules/auth';
+import boards from './redux/modules/boards';
+import tasks from './redux/modules/tasks';
 import { reducer as formReducer } from 'redux-form'
 
 export default combineReducers({
-    list,
-    signUp,
+    auth,
     boards,
     tasks,
     form: formReducer

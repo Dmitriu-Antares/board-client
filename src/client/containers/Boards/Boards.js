@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { createBoard, showBoards } from '../../redux/actions/boards';
+import { createBoard, showBoards } from '../../redux/modules/boards';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 @connect( state=>({
-    userId: state.signUp.user.id,
+    userId: state.auth.user.id,
     boardCreated: state.boards.success,
     boards: state.boards.tables
 }),{ createBoard, showBoards })

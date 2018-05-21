@@ -3,7 +3,7 @@ import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import { signUpModal } from '../../redux/actions/signUp';
+import { signUpModal } from '../../redux/modules/auth';
 
 
 const validate = values => {
@@ -76,7 +76,7 @@ export default class SignUp extends Component {
                 }
             })
             .catch( err => {
-                this.setState({ errors:err.response.data.error })
+                err.response.data && this.setState({ errors:err.response.data.error })
             });
     };
 

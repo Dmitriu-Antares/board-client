@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logout } from '../../redux/actions/signUp';
+import { logout } from '../../redux/modules/auth';
 import { withRouter } from 'react-router-dom';
 import server from '../../server';
 
@@ -20,8 +20,8 @@ const Auth = props => {
 
 @connect(
     state => ({
-        user: state.signUp.user,
-        isAuth: state.signUp.isAuth
+        user: state.auth.user,
+        isAuth: state.auth.isAuth
     }),
     { logout }
 )

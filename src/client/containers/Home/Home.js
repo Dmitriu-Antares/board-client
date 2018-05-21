@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { Header } from '../index.js';
 @connect(state => ({
-    isAuth:state.signUp.isAuth
+    isAuth:state.auth.isAuth
 }), {})
 
 export default class Home extends Component {

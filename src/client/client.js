@@ -8,21 +8,30 @@ import reducer from './root-reducer';
 import thunk from 'redux-thunk';
 import setAuthToken from './utils/token';
 import jwt from 'jsonwebtoken';
-import { reduxMiddleWare } from './redux/reduxMiddleware';
+import { reduxMiddleWare } from './redux/middlewares/reduxMiddleware';
 
-import { login } from './redux/actions/signUp';
+import { login } from './redux/modules/auth';
 
 require('./scss/libs/boostrap.css');
 require('./scss/main.scss');
 
-const store = createStore(
-    reducer,
-    window.INITIAL_STATE,
-    compose(
-        applyMiddleware(thunk,reduxMiddleWare),
-        window.devToolsExtension ? window.devToolsExtension() : f => f
-    )
-);
+function configureStore() {
+    const store = createStore(
+        reducer,
+        window.INITIAL_STATE,
+        compose(
+            applyMiddleware(thunk,reduxMiddleWare),
+            window.devToolsExtension ? window.devToolsExtension() : f => f
+        )
+    );
+
+    return store;
+}
+
+
+let store = configureStore();
+
+console.log(store);
 
 if(localStorage.jwtToken){
     setAuthToken(localStorage.jwtToken);

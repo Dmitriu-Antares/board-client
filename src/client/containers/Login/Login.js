@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { login } from '../../redux/actions/signUp';
+import { login } from '../../redux/modules/auth';
 import LoginForm from './LoginForm';
 
 @connect(
     state=>({
-        successMessage:state.signUp
+        successMessage: state.auth.signUp
     }),
     {login})
 
@@ -20,3 +20,6 @@ export default class Login extends Component {
         )
     }
 }
+
+// antares11
+// modern11
